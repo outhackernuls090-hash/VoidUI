@@ -28,7 +28,7 @@ It ships as a clean multi-file module tree for development, **and** as a single 
 This is the simplest path if you're running from an executor. Host the bundled file (`VoidUI.lua`) somewhere reachable over HTTP — a GitHub raw link, a paste service, or your own CDN — then load it in one line:
 
 ```lua
-local VoidUI = loadstring(game:HttpGet("https://your-cdn.example.com/VoidUI.lua"))()
+local VoidUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/outhackernuls090-hash/VoidUI/refs/heads/main/VoidUI.lua"))()
 
 local UI = VoidUI.new({ Name = "My UI", Startup = true })
 UI:SetTheme("Midnight")
