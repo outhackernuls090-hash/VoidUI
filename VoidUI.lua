@@ -1199,6 +1199,7 @@ local IconLibrary = {
 	Filter = { { "path", { { 4, 5 }, { 20, 5 }, { 14, 12 }, { 14, 19 }, { 10, 17 }, { 10, 12 } } } },
 	BookmarkPlus = { { "path", { { 6, 4 }, { 18, 4 }, { 18, 20 }, { 12, 16 }, { 6, 20 } } }, { "line", 12, 8, 12, 13, 2 }, { "line", 9, 10, 15, 10, 2 } },
 	Sparkle = { { "path", { { 12, 3 }, { 14, 10 }, { 21, 12 }, { 14, 14 }, { 12, 21 }, { 10, 14 }, { 3, 12 }, { 10, 10 } } } },
+	Square = { { "rect", 5, 5, 14, 14, 2 } },
 	Void = { { "circle", 12, 12, 8 }, { "circle", 12, 12, 4 }, { "circle", 12, 12, 1 } },
 	Sword = { { "path", { { 14, 4 }, { 20, 4 }, { 20, 10 }, { 8, 22 }, { 4, 22 }, { 4, 18 }, { 14, 4 } } }, { "line", 4, 18, 8, 22, 2 } },
 	ShieldPlus = { { "path", { { 12, 3 }, { 20, 6 }, { 20, 12 }, { 12, 21 }, { 4, 12 }, { 4, 6 } } }, { "line", 12, 9, 12, 15, 2 }, { "line", 9, 12, 15, 12, 2 } },
@@ -5844,6 +5845,8 @@ local Crimson = {
 		BodySize = 14,
 		CaptionSize = 12,
 		SmallSize = 11,
+		SubheaderSize = 15,
+		FontItalic = Enum.Font.Gotham,
 	},
 
 	Layout = {
@@ -5970,6 +5973,8 @@ local Default = {
 		BodySize = 14,
 		CaptionSize = 12,
 		SmallSize = 11,
+		SubheaderSize = 15,
+		FontItalic = Enum.Font.Gotham,
 	},
 
 	Layout = {
@@ -6094,6 +6099,8 @@ local Emerald = {
 		BodySize = 14,
 		CaptionSize = 12,
 		SmallSize = 11,
+		SubheaderSize = 15,
+		FontItalic = Enum.Font.Gotham,
 	},
 
 	Layout = {
@@ -6218,6 +6225,8 @@ local Midnight = {
 		BodySize = 14,
 		CaptionSize = 12,
 		SmallSize = 11,
+		SubheaderSize = 15,
+		FontItalic = Enum.Font.Gotham,
 	},
 
 	Layout = {
@@ -6342,6 +6351,8 @@ local Nebula = {
 		BodySize = 14,
 		CaptionSize = 12,
 		SmallSize = 11,
+		SubheaderSize = 15,
+		FontItalic = Enum.Font.Gotham,
 	},
 
 	Layout = {

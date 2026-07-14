@@ -66,6 +66,8 @@ local Nebula = {
 		BodySize = 14,
 		CaptionSize = 12,
 		SmallSize = 11,
+		SubheaderSize = 15,
+		FontItalic = Enum.Font.Gotham,
 	},
 
 	Layout = {
