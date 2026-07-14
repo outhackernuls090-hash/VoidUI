@@ -12,7 +12,7 @@ function Section.new(Application, Parent, Options)
 	self.Collapsible = Options.Collapsible or false
 	self.Collapsed = Options.Collapsed or false
 	self.Children = {}
-	self._Build()
+	self:_Build()
 	return self
 end
 

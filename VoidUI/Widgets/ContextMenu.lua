@@ -9,7 +9,7 @@ function ContextMenu.new(Application, Items)
 	local self = setmetatable(Base.new(Application, Application.Renderer:GetLayer("Overlays"), {}), ContextMenu)
 	self.Items = Items or {}
 	self.Open = false
-	self._Build()
+	self:_Build()
 	return self
 end
 

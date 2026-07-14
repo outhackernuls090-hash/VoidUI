@@ -12,7 +12,7 @@ function Label.new(Application, Parent, Options)
 	self.Align = Options.Align or Enum.TextXAlignment.Left
 	self.Wrap = Options.Wrap or false
 	self.Rich = Options.Rich or false
-	self._Build()
+	self:_Build()
 	return self
 end
 

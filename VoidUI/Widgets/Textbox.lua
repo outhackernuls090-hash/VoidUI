@@ -14,7 +14,7 @@ function Textbox.new(Application, Parent, Options)
 	self.Password = Options.Password or false
 	self.Multiline = Options.Multiline or false
 	self.MaxLength = Options.MaxLength or 99999
-	self._Build()
+	self:_Build()
 	return self
 end
 

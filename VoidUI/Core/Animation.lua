@@ -267,11 +267,13 @@ function Animation:Shutdown()
 	self.Scheduler:Shutdown()
 end
 
-Animation.Spring = Spring
-Animation.Tween = Tween
-Animation.Physics = Physics
-Animation.Blur = Blur
-Animation.Glow = Glow
-Animation.Particles = Particles
+Animation.Classes = {
+	Spring = Spring,
+	Tween = Tween,
+	Physics = Physics,
+	Blur = Blur,
+	Glow = Glow,
+	Particles = Particles,
+}
 
 return Animation

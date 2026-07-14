@@ -9,7 +9,7 @@ function CommandPalette.new(Application, Options)
 	local self = setmetatable(Base.new(Application, Application.Renderer:GetLayer("Overlays"), Options), CommandPalette)
 	self.Commands = Options and Options.Commands or {}
 	self.Open = false
-	self._Build()
+	self:_Build()
 	return self
 end
 

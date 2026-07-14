@@ -10,7 +10,7 @@ function Toggle.new(Application, Parent, Options)
 	self.Label = Options.Label or "Toggle"
 	self.Description = Options.Description or ""
 	self.Callback = Options.Callback
-	self._Build()
+	self:_Build()
 	return self
 end
 

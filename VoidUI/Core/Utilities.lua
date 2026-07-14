@@ -589,72 +589,72 @@ function Utilities.Image(Properties)
 	return Utilities.Create("ImageLabel", Properties)
 end
 
-function Utilities.Roundify(Instance, Radius)
+function Utilities.Roundify(Parent, Radius)
 	local Corner = Instance.new("UICorner")
 	Corner.CornerRadius = UDim.new(0, Radius or 8)
-	Corner.Parent = Instance
+	Corner.Parent = Parent
 	return Corner
 end
 
-function Utilities.AddPadding(Instance, Padding)
+function Utilities.AddPadding(Parent, Padding)
 	local UIPadding = Instance.new("UIPadding")
 	UIPadding.PaddingLeft = UDim.new(0, Padding or 8)
 	UIPadding.PaddingRight = UDim.new(0, Padding or 8)
 	UIPadding.PaddingTop = UDim.new(0, Padding or 8)
 	UIPadding.PaddingBottom = UDim.new(0, Padding or 8)
-	UIPadding.Parent = Instance
+	UIPadding.Parent = Parent
 	return UIPadding
 end
 
-function Utilities.AddListLayout(Instance, Direction, Padding, Align)
+function Utilities.AddListLayout(Parent, Direction, Padding, Align)
 	local Layout = Instance.new("UIListLayout")
 	Layout.FillDirection = Direction or Enum.FillDirection.Vertical
 	Layout.Padding = UDim.new(0, Padding or 6)
 	Layout.SortOrder = Enum.SortOrder.LayoutOrder
 	Layout.HorizontalAlignment = Align or Enum.HorizontalAlignment.Left
 	Layout.VerticalAlignment = Enum.VerticalAlignment.Top
-	Layout.Parent = Instance
+	Layout.Parent = Parent
 	return Layout
 end
 
-function Utilities.AddGridLayout(Instance, CellSize, CellPadding)
+function Utilities.AddGridLayout(Parent, CellSize, CellPadding)
 	local Layout = Instance.new("UIGridLayout")
 	Layout.CellSize = CellSize or UDim2.fromOffset(100, 100)
 	Layout.CellPadding = CellPadding or UDim2.fromOffset(6, 6)
 	Layout.SortOrder = Enum.SortOrder.LayoutOrder
-	Layout.Parent = Instance
+	Layout.Parent = Parent
 	return Layout
 end
 
-function Utilities.AddStroke(Instance, Color, Thickness, Transparency)
+function Utilities.AddStroke(Parent, Color, Thickness, Transparency)
 	local Stroke = Instance.new("UIStroke")
 	Stroke.Color = Color or Color3.fromRGB(255, 255, 255)
 	Stroke.Thickness = Thickness or 1
 	Stroke.Transparency = Transparency or 0
 	Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	Stroke.Parent = Instance
+	Stroke.Parent = Parent
 	return Stroke
 end
 
-function Utilities.AddGradient(Instance, Colors, Rotation)
+function Utilities.AddGradient(Parent, Colors, Rotation)
 	local Gradient = Instance.new("UIGradient")
 	Gradient.Color = Colors or ColorSequence.new(Color3.fromRGB(255, 255, 255))
 	Gradient.Rotation = Rotation or 90
-	Gradient.Parent = Instance
+	Gradient.Parent = Parent
 	return Gradient
 end
 
-function Utilities.AddAspectRatio(Instance, Ratio)
+function Utilities.AddAspectRatio(Parent, Ratio)
 	local Constraint = Instance.new("UIAspectRatioConstraint")
 	Constraint.AspectRatio = Ratio or 1
-	Constraint.Parent = Instance
+	Constraint.Parent = Parent
 	return Constraint
 end
 
-function Utilities.AddScale(Instance, XScale, YScale)
+function Utilities.AddScale(Parent, XScale, YScale)
 	local Constraint = Instance.new("UIScale")
 	Constraint.Scale = 1
-	Constraint.Parent = Instance
+	Constraint.Parent = Parent
 	return Constraint
 end
 

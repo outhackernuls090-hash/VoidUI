@@ -15,7 +15,7 @@ function Tabs.new(Window, Options)
 	self.Widgets = {}
 	self.Sections = {}
 	self.Changed = Events.new()
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -111,6 +111,7 @@ function Tabs:Deselect()
 end
 
 function Tabs:_CreateWidget(WidgetModule, Options)
+	Options = Options or {}
 	local Widget = WidgetModule.new(self.Application, self.Window.ContentScroll, Options)
 	table.insert(self.Widgets, Widget)
 	return Widget
@@ -161,6 +162,7 @@ function Tabs:CreateParagraph(Options)
 end
 
 function Tabs:CreateSection(Options)
+	Options = Options or {}
 	local Section = require(script.Parent.Section).new(self.Application, self.Window.ContentScroll, Options)
 	table.insert(self.Sections, Section)
 	return Section

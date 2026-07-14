@@ -20,7 +20,7 @@ function Renderer.new(Theme, Animation)
 	self.Blurs = {}
 	self.ParticleSystems = {}
 	self.CursorLight = nil
-	self._Initialize()
+	self:_Initialize()
 	return self
 end
 

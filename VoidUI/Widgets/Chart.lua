@@ -12,7 +12,7 @@ function Chart.new(Application, Parent, Options)
 	self.Height = Options.Height or 160
 	self.Colors = Options.Colors or { self.Theme.Color("Accent"), self.Theme.Color("Success"), self.Theme.Color("Warning"), self.Theme.Color("Danger"), self.Theme.Color("Info") }
 	self.ShowLegend = Options.ShowLegend or false
-	self._Build()
+	self:_Build()
 	return self
 end
 

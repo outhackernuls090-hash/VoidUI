@@ -36,7 +36,7 @@ function Window.new(Application, Options)
 	self.Cleanup = Cleanup.new()
 	self._DragData = nil
 	self._ResizeData = nil
-	self._Build()
+	self:_Build()
 	return self
 end
 

@@ -11,7 +11,7 @@ function NestedTabs.new(Application, Parent, Options)
 	self.Tabs = Options.Tabs or {}
 	self.Active = nil
 	self.Changed = Events.new()
-	self._Build()
+	self:_Build()
 	return self
 end
 

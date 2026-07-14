@@ -15,7 +15,7 @@ function Slider.new(Application, Parent, Options)
 	self.Callback = Options.Callback
 	self.Precision = Options.Precision or 0
 	self._Dragging = false
-	self._Build()
+	self:_Build()
 	return self
 end
 

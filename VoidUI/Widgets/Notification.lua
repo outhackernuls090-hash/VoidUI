@@ -11,7 +11,7 @@ function Notification.new(Application, Parent, Options)
 	self.Description = Options.Description or ""
 	self.Type = Options.Type or "Info"
 	self.Duration = Options.Duration or 4
-	self._Build()
+	self:_Build()
 	return self
 end
 

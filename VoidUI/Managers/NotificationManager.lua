@@ -18,7 +18,7 @@ function NotificationManager.new(Parent, Theme)
 	self.Dismissed = Events.new()
 	self.Cleanup = Cleanup.new()
 	self.Container = nil
-	self._Build()
+	self:_Build()
 	return self
 end
 

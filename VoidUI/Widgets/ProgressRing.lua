@@ -11,7 +11,7 @@ function ProgressRing.new(Application, Parent, Options)
 	self.Max = Options.Max or 100
 	self.Size = Options.Size or 80
 	self.Label = Options.Label or ""
-	self._Build()
+	self:_Build()
 	return self
 end
 

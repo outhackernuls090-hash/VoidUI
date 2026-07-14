@@ -10,7 +10,7 @@ function Video.new(Application, Parent, Options)
 	self.VideoId = Options.VideoId or Options.Source or ""
 	self.Label = Options.Label or ""
 	self.Playing = false
-	self._Build()
+	self:_Build()
 	return self
 end
 

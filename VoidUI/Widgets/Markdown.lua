@@ -7,7 +7,7 @@ Markdown.__index = setmetatable(Markdown, Base)
 function Markdown.new(Application, Parent, Options)
 	local self = setmetatable(Base.new(Application, Parent, Options), Markdown)
 	self.Content = Options.Content or ""
-	self._Build()
+	self:_Build()
 	return self
 end
 

@@ -10,7 +10,7 @@ function Terminal.new(Application, Parent, Options)
 	self.Prompt = Options.Prompt or "void@ui:~$"
 	self.History = {}
 	self.Commands = Options.Commands or {}
-	self._Build()
+	self:_Build()
 	return self
 end
 

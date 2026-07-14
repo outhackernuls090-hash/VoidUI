@@ -48,7 +48,7 @@ function Application.new(Options)
 	self.Widgets = Widgets
 	self.Windows = {}
 	self.Splash = nil
-	self._Initialize()
+	self:_Initialize()
 	return self
 end
 
@@ -246,7 +246,7 @@ function Application:_BuildSplash()
 		ZIndex = 103,
 		Parent = Center,
 	})
-	local BarCorner = Utilities.Roundify(BarCorner, 999)
+	local BarCorner = Utilities.Roundify(ProgressBar, 999)
 	local ProgressFill = Utilities.Create("Frame", {
 		BackgroundColor3 = Theme.Color("Accent"),
 		BorderSizePixel = 0,

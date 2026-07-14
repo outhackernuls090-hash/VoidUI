@@ -15,7 +15,7 @@ function GradientPicker.new(Application, Parent, Options)
 	self.Callback = Options.Callback
 	self.Open = false
 	self.SelectedStop = 1
-	self._Build()
+	self:_Build()
 	return self
 end
 

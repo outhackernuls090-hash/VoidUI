@@ -10,7 +10,7 @@ function Image.new(Application, Parent, Options)
 	self.Source = Options.Source or Options.Image or ""
 	self.Label = Options.Label or ""
 	self.Rounded = Options.Rounded ~= false
-	self._Build()
+	self:_Build()
 	return self
 end
 

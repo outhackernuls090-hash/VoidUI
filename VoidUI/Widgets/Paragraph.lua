@@ -8,7 +8,7 @@ function Paragraph.new(Application, Parent, Options)
 	local self = setmetatable(Base.new(Application, Parent, Options), Paragraph)
 	self.Title = Options.Title or ""
 	self.Text = Options.Text or ""
-	self._Build()
+	self:_Build()
 	return self
 end
 

@@ -1731,12 +1731,14 @@ function Animation:Shutdown()
 	self.Scheduler:Shutdown()
 end
 
-Animation.Spring = Spring
-Animation.Tween = Tween
-Animation.Physics = Physics
-Animation.Blur = Blur
-Animation.Glow = Glow
-Animation.Particles = Particles
+Animation.Classes = {
+	Spring = Spring,
+	Tween = Tween,
+	Physics = Physics,
+	Blur = Blur,
+	Glow = Glow,
+	Particles = Particles,
+}
 
 return Animation
 
@@ -1793,7 +1795,7 @@ function Application.new(Options)
 	self.Widgets = Widgets
 	self.Windows = {}
 	self.Splash = nil
-	self._Initialize()
+	self:_Initialize()
 	return self
 end
 
@@ -1991,7 +1993,7 @@ function Application:_BuildSplash()
 		ZIndex = 103,
 		Parent = Center,
 	})
-	local BarCorner = Utilities.Roundify(BarCorner, 999)
+	local BarCorner = Utilities.Roundify(ProgressBar, 999)
 	local ProgressFill = Utilities.Create("Frame", {
 		BackgroundColor3 = Theme.Color("Accent"),
 		BorderSizePixel = 0,
@@ -2464,7 +2466,7 @@ function Renderer.new(Theme, Animation)
 	self.Blurs = {}
 	self.ParticleSystems = {}
 	self.CursorLight = nil
-	self._Initialize()
+	self:_Initialize()
 	return self
 end
 
@@ -3586,72 +3588,72 @@ function Utilities.Image(Properties)
 	return Utilities.Create("ImageLabel", Properties)
 end
 
-function Utilities.Roundify(Instance, Radius)
+function Utilities.Roundify(Parent, Radius)
 	local Corner = Instance.new("UICorner")
 	Corner.CornerRadius = UDim.new(0, Radius or 8)
-	Corner.Parent = Instance
+	Corner.Parent = Parent
 	return Corner
 end
 
-function Utilities.AddPadding(Instance, Padding)
+function Utilities.AddPadding(Parent, Padding)
 	local UIPadding = Instance.new("UIPadding")
 	UIPadding.PaddingLeft = UDim.new(0, Padding or 8)
 	UIPadding.PaddingRight = UDim.new(0, Padding or 8)
 	UIPadding.PaddingTop = UDim.new(0, Padding or 8)
 	UIPadding.PaddingBottom = UDim.new(0, Padding or 8)
-	UIPadding.Parent = Instance
+	UIPadding.Parent = Parent
 	return UIPadding
 end
 
-function Utilities.AddListLayout(Instance, Direction, Padding, Align)
+function Utilities.AddListLayout(Parent, Direction, Padding, Align)
 	local Layout = Instance.new("UIListLayout")
 	Layout.FillDirection = Direction or Enum.FillDirection.Vertical
 	Layout.Padding = UDim.new(0, Padding or 6)
 	Layout.SortOrder = Enum.SortOrder.LayoutOrder
 	Layout.HorizontalAlignment = Align or Enum.HorizontalAlignment.Left
 	Layout.VerticalAlignment = Enum.VerticalAlignment.Top
-	Layout.Parent = Instance
+	Layout.Parent = Parent
 	return Layout
 end
 
-function Utilities.AddGridLayout(Instance, CellSize, CellPadding)
+function Utilities.AddGridLayout(Parent, CellSize, CellPadding)
 	local Layout = Instance.new("UIGridLayout")
 	Layout.CellSize = CellSize or UDim2.fromOffset(100, 100)
 	Layout.CellPadding = CellPadding or UDim2.fromOffset(6, 6)
 	Layout.SortOrder = Enum.SortOrder.LayoutOrder
-	Layout.Parent = Instance
+	Layout.Parent = Parent
 	return Layout
 end
 
-function Utilities.AddStroke(Instance, Color, Thickness, Transparency)
+function Utilities.AddStroke(Parent, Color, Thickness, Transparency)
 	local Stroke = Instance.new("UIStroke")
 	Stroke.Color = Color or Color3.fromRGB(255, 255, 255)
 	Stroke.Thickness = Thickness or 1
 	Stroke.Transparency = Transparency or 0
 	Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-	Stroke.Parent = Instance
+	Stroke.Parent = Parent
 	return Stroke
 end
 
-function Utilities.AddGradient(Instance, Colors, Rotation)
+function Utilities.AddGradient(Parent, Colors, Rotation)
 	local Gradient = Instance.new("UIGradient")
 	Gradient.Color = Colors or ColorSequence.new(Color3.fromRGB(255, 255, 255))
 	Gradient.Rotation = Rotation or 90
-	Gradient.Parent = Instance
+	Gradient.Parent = Parent
 	return Gradient
 end
 
-function Utilities.AddAspectRatio(Instance, Ratio)
+function Utilities.AddAspectRatio(Parent, Ratio)
 	local Constraint = Instance.new("UIAspectRatioConstraint")
 	Constraint.AspectRatio = Ratio or 1
-	Constraint.Parent = Instance
+	Constraint.Parent = Parent
 	return Constraint
 end
 
-function Utilities.AddScale(Instance, XScale, YScale)
+function Utilities.AddScale(Parent, XScale, YScale)
 	local Constraint = Instance.new("UIScale")
 	Constraint.Scale = 1
-	Constraint.Parent = Instance
+	Constraint.Parent = Parent
 	return Constraint
 end
 
@@ -3837,7 +3839,7 @@ function Window.new(Application, Options)
 	self.Cleanup = Cleanup.new()
 	self._DragData = nil
 	self._ResizeData = nil
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -4749,7 +4751,7 @@ function InputManager.new()
 	self.Cleanup = Cleanup.new()
 	self.MousePosition = Vector2.new(0, 0)
 	self.PressedKeys = {}
-	self._Initialize()
+	self:_Initialize()
 	return self
 end
 
@@ -5169,7 +5171,7 @@ function NotificationManager.new(Parent, Theme)
 	self.Dismissed = Events.new()
 	self.Cleanup = Cleanup.new()
 	self.Container = nil
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -6428,6 +6430,20 @@ function ThemeManager.new()
 	self.Accent = Color3.fromRGB(124, 162, 255)
 	self._AccentPalette = Utilities.GenerateAccent(self.Accent)
 	self:RegisterBuiltIns()
+	-- Bind accessor methods so they work with both dot (Theme.Color("X"))
+	-- and colon (Theme:Color("X")) call syntax.
+	local function Bind(Method)
+		return function(...)
+			local Key = select(select("#", ...), ...)
+			return Method(self, Key)
+		end
+	end
+	self.Color = Bind(ThemeManager.Color)
+	self.Gradient = Bind(ThemeManager.Gradient)
+	self.Typography = Bind(ThemeManager.Typography)
+	self.Layout = Bind(ThemeManager.Layout)
+	self.Effect = Bind(ThemeManager.Effect)
+	self.Animation = Bind(ThemeManager.Animation)
 	return self
 end
 
@@ -6669,7 +6685,7 @@ function Accordion.new(Application, Parent, Options)
 	self.Items = Options.Items or {}
 	self.MultiExpand = Options.MultiExpand or false
 	self.Expanded = {}
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -6815,7 +6831,7 @@ function Audio.new(Application, Parent, Options)
 	self.Label = Options.Label or "Audio"
 	self.Volume = Options.Volume or 1
 	self.Playing = false
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -7070,7 +7086,7 @@ function Breadcrumbs.new(Application, Parent, Options)
 	local self = setmetatable(Base.new(Application, Parent, Options or {}), Breadcrumbs)
 	self.Items = (Options and Options.Items) or {}
 	self.OnNavigate = Options and Options.OnNavigate
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -7377,7 +7393,7 @@ function Chart.new(Application, Parent, Options)
 	self.Height = Options.Height or 160
 	self.Colors = Options.Colors or { self.Theme.Color("Accent"), self.Theme.Color("Success"), self.Theme.Color("Warning"), self.Theme.Color("Danger"), self.Theme.Color("Info") }
 	self.ShowLegend = Options.ShowLegend or false
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -7528,7 +7544,7 @@ function CodeEditor.new(Application, Parent, Options)
 	self.Code = Options.Code or ""
 	self.Language = Options.Language or "lua"
 	self.LineNumbers = Options.LineNumbers ~= false
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -7692,7 +7708,7 @@ function ColorPicker.new(Application, Parent, Options)
 	self.Hue = H
 	self.Saturation = S
 	self.ValueV = V
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -7961,7 +7977,7 @@ function CommandPalette.new(Application, Options)
 	local self = setmetatable(Base.new(Application, Application.Renderer:GetLayer("Overlays"), Options), CommandPalette)
 	self.Commands = Options and Options.Commands or {}
 	self.Open = false
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -8216,7 +8232,7 @@ function Console.new(Application, Parent, Options)
 	self.MaxLines = Options.MaxLines or 200
 	self.Lines = {}
 	self.Filter = Options.Filter or {}
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -8375,7 +8391,7 @@ function ContextMenu.new(Application, Items)
 	local self = setmetatable(Base.new(Application, Application.Renderer:GetLayer("Overlays"), {}), ContextMenu)
 	self.Items = Items or {}
 	self.Open = false
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -8518,7 +8534,7 @@ function Divider.new(Application, Parent, Options)
 	self.Orientation = Options.Orientation or "Horizontal"
 	self.Text = Options.Text or ""
 	self.Thickness = Options.Thickness or 1
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -8591,7 +8607,7 @@ function Dropdown.new(Application, Parent, Options)
 	self.MultiSelect = Options.MultiSelect or false
 	self.Selected = {}
 	self.Open = false
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -8813,7 +8829,7 @@ function FileExplorer.new(Application, Parent, Options)
 		},
 	}
 	self.OnOpen = Options.OnOpen
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -8926,7 +8942,7 @@ function GradientPicker.new(Application, Parent, Options)
 	self.Callback = Options.Callback
 	self.Open = false
 	self.SelectedStop = 1
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -9184,7 +9200,7 @@ function Graph.new(Application, Parent, Options)
 	self.Max = Options.Max or 100
 	self.Color = Options.Color or self.Theme.Color("Accent")
 	self.Filled = Options.Filled ~= false
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -9300,7 +9316,7 @@ function Image.new(Application, Parent, Options)
 	self.Source = Options.Source or Options.Image or ""
 	self.Label = Options.Label or ""
 	self.Rounded = Options.Rounded ~= false
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -9368,7 +9384,7 @@ function Keybind.new(Application, Parent, Options)
 	self.Label = Options.Label or "Keybind"
 	self.Callback = Options.Callback
 	self.Listening = false
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -9495,7 +9511,7 @@ function Label.new(Application, Parent, Options)
 	self.Align = Options.Align or Enum.TextXAlignment.Left
 	self.Wrap = Options.Wrap or false
 	self.Rich = Options.Rich or false
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -9552,7 +9568,7 @@ Markdown.__index = setmetatable(Markdown, Base)
 function Markdown.new(Application, Parent, Options)
 	local self = setmetatable(Base.new(Application, Parent, Options), Markdown)
 	self.Content = Options.Content or ""
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -9655,7 +9671,7 @@ function Modal.new(Application, Options)
 	self.Description = Options.Description or ""
 	self.Buttons = Options.Buttons or { { Label = "OK", Variant = "Primary" } }
 	self.Open = false
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -9804,7 +9820,7 @@ function NestedTabs.new(Application, Parent, Options)
 	self.Tabs = Options.Tabs or {}
 	self.Active = nil
 	self.Changed = Events.new()
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -9973,7 +9989,7 @@ function Notification.new(Application, Parent, Options)
 	self.Description = Options.Description or ""
 	self.Type = Options.Type or "Info"
 	self.Duration = Options.Duration or 4
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -10107,7 +10123,7 @@ function Paragraph.new(Application, Parent, Options)
 	local self = setmetatable(Base.new(Application, Parent, Options), Paragraph)
 	self.Title = Options.Title or ""
 	self.Text = Options.Text or ""
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -10182,7 +10198,7 @@ function Progress.new(Application, Parent, Options)
 	self.Label = Options.Label or ""
 	self.ShowPercent = Options.ShowPercent ~= false
 	self.Callback = Options.Callback
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -10301,7 +10317,7 @@ function ProgressRing.new(Application, Parent, Options)
 	self.Max = Options.Max or 100
 	self.Size = Options.Size or 80
 	self.Label = Options.Label or ""
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -10419,7 +10435,7 @@ function SearchDropdown.new(Application, Parent, Options)
 	self.Callback = Options.Callback
 	self.MaxResults = Options.MaxResults or 50
 	self.Open = false
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -10637,7 +10653,7 @@ function Section.new(Application, Parent, Options)
 	self.Collapsible = Options.Collapsible or false
 	self.Collapsed = Options.Collapsed or false
 	self.Children = {}
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -10762,7 +10778,7 @@ function Slider.new(Application, Parent, Options)
 	self.Callback = Options.Callback
 	self.Precision = Options.Precision or 0
 	self._Dragging = false
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -10943,7 +10959,7 @@ function Table.new(Application, Parent, Options)
 	self.Sortable = Options.Sortable ~= false
 	self.Striped = Options.Striped or false
 	self.OnRowClick = Options.OnRowClick
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -11106,7 +11122,7 @@ function Tabs.new(Window, Options)
 	self.Widgets = {}
 	self.Sections = {}
 	self.Changed = Events.new()
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -11202,6 +11218,7 @@ function Tabs:Deselect()
 end
 
 function Tabs:_CreateWidget(WidgetModule, Options)
+	Options = Options or {}
 	local Widget = WidgetModule.new(self.Application, self.Window.ContentScroll, Options)
 	table.insert(self.Widgets, Widget)
 	return Widget
@@ -11252,6 +11269,7 @@ function Tabs:CreateParagraph(Options)
 end
 
 function Tabs:CreateSection(Options)
+	Options = Options or {}
 	local Section = VoidRequire("Widgets.Section").new(self.Application, self.Window.ContentScroll, Options)
 	table.insert(self.Sections, Section)
 	return Section
@@ -11371,7 +11389,7 @@ function Terminal.new(Application, Parent, Options)
 	self.Prompt = Options.Prompt or "void@ui:~$"
 	self.History = {}
 	self.Commands = Options.Commands or {}
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -11560,7 +11578,7 @@ function Textbox.new(Application, Parent, Options)
 	self.Password = Options.Password or false
 	self.Multiline = Options.Multiline or false
 	self.MaxLength = Options.MaxLength or 99999
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -11712,7 +11730,7 @@ function Timeline.new(Application, Parent, Options)
 	self.Playing = false
 	self.Position = 0
 	self.OnSeek = Options.OnSeek
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -11886,7 +11904,7 @@ function Toggle.new(Application, Parent, Options)
 	self.Label = Options.Label or "Toggle"
 	self.Description = Options.Description or ""
 	self.Callback = Options.Callback
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -12037,7 +12055,7 @@ function Tooltip.new(Application, Text)
 	self.Text = Text or ""
 	self.Target = nil
 	self.Visible = false
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -12125,7 +12143,7 @@ function TreeView.new(Application, Parent, Options)
 	local self = setmetatable(Base.new(Application, Parent, Options), TreeView)
 	self.Nodes = Options.Nodes or {}
 	self.OnSelect = Options.OnSelect
-	self._Build()
+	self:_Build()
 	return self
 end
 
@@ -12252,7 +12270,7 @@ function Video.new(Application, Parent, Options)
 	self.VideoId = Options.VideoId or Options.Source or ""
 	self.Label = Options.Label or ""
 	self.Playing = false
-	self._Build()
+	self:_Build()
 	return self
 end
 

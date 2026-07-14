@@ -10,7 +10,7 @@ function CodeEditor.new(Application, Parent, Options)
 	self.Code = Options.Code or ""
 	self.Language = Options.Language or "lua"
 	self.LineNumbers = Options.LineNumbers ~= false
-	self._Build()
+	self:_Build()
 	return self
 end
 

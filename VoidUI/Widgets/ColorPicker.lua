@@ -15,7 +15,7 @@ function ColorPicker.new(Application, Parent, Options)
 	self.Hue = H
 	self.Saturation = S
 	self.ValueV = V
-	self._Build()
+	self:_Build()
 	return self
 end
 

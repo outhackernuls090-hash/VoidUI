@@ -10,7 +10,7 @@ function Console.new(Application, Parent, Options)
 	self.MaxLines = Options.MaxLines or 200
 	self.Lines = {}
 	self.Filter = Options.Filter or {}
-	self._Build()
+	self:_Build()
 	return self
 end
 

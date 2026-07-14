@@ -9,7 +9,7 @@ function Tooltip.new(Application, Text)
 	self.Text = Text or ""
 	self.Target = nil
 	self.Visible = false
-	self._Build()
+	self:_Build()
 	return self
 end
 

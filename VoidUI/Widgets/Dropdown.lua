@@ -14,7 +14,7 @@ function Dropdown.new(Application, Parent, Options)
 	self.MultiSelect = Options.MultiSelect or false
 	self.Selected = {}
 	self.Open = false
-	self._Build()
+	self:_Build()
 	return self
 end
 

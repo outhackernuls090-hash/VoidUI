@@ -11,7 +11,7 @@ function Table.new(Application, Parent, Options)
 	self.Sortable = Options.Sortable ~= false
 	self.Striped = Options.Striped or false
 	self.OnRowClick = Options.OnRowClick
-	self._Build()
+	self:_Build()
 	return self
 end
 

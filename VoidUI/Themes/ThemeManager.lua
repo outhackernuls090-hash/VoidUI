@@ -17,6 +17,20 @@ function ThemeManager.new()
 	self.Accent = Color3.fromRGB(124, 162, 255)
 	self._AccentPalette = Utilities.GenerateAccent(self.Accent)
 	self:RegisterBuiltIns()
+	-- Bind accessor methods so they work with both dot (Theme.Color("X"))
+	-- and colon (Theme:Color("X")) call syntax.
+	local function Bind(Method)
+		return function(...)
+			local Key = select(select("#", ...), ...)
+			return Method(self, Key)
+		end
+	end
+	self.Color = Bind(ThemeManager.Color)
+	self.Gradient = Bind(ThemeManager.Gradient)
+	self.Typography = Bind(ThemeManager.Typography)
+	self.Layout = Bind(ThemeManager.Layout)
+	self.Effect = Bind(ThemeManager.Effect)
+	self.Animation = Bind(ThemeManager.Animation)
 	return self
 end
 

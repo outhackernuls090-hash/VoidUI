@@ -13,7 +13,7 @@ function Graph.new(Application, Parent, Options)
 	self.Max = Options.Max or 100
 	self.Color = Options.Color or self.Theme.Color("Accent")
 	self.Filled = Options.Filled ~= false
-	self._Build()
+	self:_Build()
 	return self
 end
 

@@ -15,7 +15,7 @@ function SearchDropdown.new(Application, Parent, Options)
 	self.Callback = Options.Callback
 	self.MaxResults = Options.MaxResults or 50
 	self.Open = false
-	self._Build()
+	self:_Build()
 	return self
 end
 

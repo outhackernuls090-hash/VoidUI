@@ -22,7 +22,7 @@ function FileExplorer.new(Application, Parent, Options)
 		},
 	}
 	self.OnOpen = Options.OnOpen
-	self._Build()
+	self:_Build()
 	return self
 end
 

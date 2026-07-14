@@ -11,7 +11,7 @@ function Keybind.new(Application, Parent, Options)
 	self.Label = Options.Label or "Keybind"
 	self.Callback = Options.Callback
 	self.Listening = false
-	self._Build()
+	self:_Build()
 	return self
 end
 

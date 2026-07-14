@@ -11,7 +11,7 @@ function Modal.new(Application, Options)
 	self.Description = Options.Description or ""
 	self.Buttons = Options.Buttons or { { Label = "OK", Variant = "Primary" } }
 	self.Open = false
-	self._Build()
+	self:_Build()
 	return self
 end
 

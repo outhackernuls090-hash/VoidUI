@@ -11,7 +11,7 @@ function Audio.new(Application, Parent, Options)
 	self.Label = Options.Label or "Audio"
 	self.Volume = Options.Volume or 1
 	self.Playing = false
-	self._Build()
+	self:_Build()
 	return self
 end
 

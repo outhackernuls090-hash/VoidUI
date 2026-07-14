@@ -9,7 +9,7 @@ function Divider.new(Application, Parent, Options)
 	self.Orientation = Options.Orientation or "Horizontal"
 	self.Text = Options.Text or ""
 	self.Thickness = Options.Thickness or 1
-	self._Build()
+	self:_Build()
 	return self
 end
 

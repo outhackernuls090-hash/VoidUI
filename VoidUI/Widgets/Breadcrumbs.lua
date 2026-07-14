@@ -9,7 +9,7 @@ function Breadcrumbs.new(Application, Parent, Options)
 	local self = setmetatable(Base.new(Application, Parent, Options or {}), Breadcrumbs)
 	self.Items = (Options and Options.Items) or {}
 	self.OnNavigate = Options and Options.OnNavigate
-	self._Build()
+	self:_Build()
 	return self
 end
 

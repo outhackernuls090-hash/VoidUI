@@ -13,7 +13,7 @@ function Timeline.new(Application, Parent, Options)
 	self.Playing = false
 	self.Position = 0
 	self.OnSeek = Options.OnSeek
-	self._Build()
+	self:_Build()
 	return self
 end
 

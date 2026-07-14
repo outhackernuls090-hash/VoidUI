@@ -18,7 +18,7 @@ function InputManager.new()
 	self.Cleanup = Cleanup.new()
 	self.MousePosition = Vector2.new(0, 0)
 	self.PressedKeys = {}
-	self._Initialize()
+	self:_Initialize()
 	return self
 end
 

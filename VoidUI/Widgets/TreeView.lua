@@ -9,7 +9,7 @@ function TreeView.new(Application, Parent, Options)
 	local self = setmetatable(Base.new(Application, Parent, Options), TreeView)
 	self.Nodes = Options.Nodes or {}
 	self.OnSelect = Options.OnSelect
-	self._Build()
+	self:_Build()
 	return self
 end
 

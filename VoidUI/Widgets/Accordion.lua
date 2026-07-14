@@ -10,7 +10,7 @@ function Accordion.new(Application, Parent, Options)
 	self.Items = Options.Items or {}
 	self.MultiExpand = Options.MultiExpand or false
 	self.Expanded = {}
-	self._Build()
+	self:_Build()
 	return self
 end
 
