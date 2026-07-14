@@ -1,5 +1,18 @@
 local Forge = require(script.Parent.Parent.Core.Forge)
 
+local RealEnum = Enum
+local Enum = setmetatable({}, {
+	__index = function(_, Category)
+		local Cat = RealEnum[Category]
+		if Cat == nil then
+			return setmetatable({}, { __index = function() return nil end })
+		end
+		return setmetatable({}, { __index = function(_, Member)
+			return Cat[Member]
+		end })
+	end,
+})
+
 local Icons = {}
 Icons.__index = Icons
 

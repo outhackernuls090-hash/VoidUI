@@ -1,26 +1,49 @@
-# VoidUI
+<div align="center">
 
-> A futuristic, premium, elegant, and minimal Roblox/Luau GUI framework — built on a battle-tested core.
+# ◈ VoidUI
 
-VoidUI takes the **proven, widely-used architecture of WindUI and Fluent** (the robust instance builder, the declarative theming system, crash-proof callbacks so your code can never take down the UI, and `cloneref`/`gethui`/`protectgui` executor compatibility) and **rebuilds it from scratch under its own name** — `Forge.Make` instead of `Creator.New`, `Skin` instead of `ThemeTag`, `Guard` instead of `SafeCallback` — then **restyles it completely** with VoidUI's own identity: dark graphite surfaces, layered floating cards, thin glowing borders, generous rounded corners, animated gradients, and five original themes (Default, Midnight, Nebula, Crimson, Emerald).
+**A futuristic, premium, and minimal Roblox/Luau GUI framework — built on a battle-tested core, restyled as its own identity.**
+
+[![Version](https://img.shields.io/badge/version-3.0.0-7CA2FF)](https://github.com/outhackernuls090-hash/VoidUI)
+[![Lua](https://img.shields.io/badge/language-Luau%20%2F%20Lua-7CA2FF)](https://luau.org)
+[![Platform](https://img.shields.io/badge/platform-Roblox%20Executors-7CA2FF)](https://roblox.com)
+[![Themes](https://img.shields.io/badge/themes-5%20built--in-7CA2FF)](https://github.com/outhackernuls090-hash/VoidUI)
+
+*Dark graphite surfaces · layered floating cards · thin glowing borders · generous rounded corners · animated gradients*
+
+</div>
+
+---
+
+## ✨ What is VoidUI?
+
+VoidUI takes the **proven, widely-used architecture of WindUI and Fluent** (the robust instance builder, the declarative theming system, crash-proof callbacks so your code can never take down the UI, and `cloneref`/`gethui`/`protectgui` executor compatibility) and **rebuilds it from scratch under its own name** — `Forge.Make` instead of `Creator.New`, `Skin` instead of `ThemeTag`, `Guard` instead of `SafeCallback` — then **restyles it completely** with VoidUI's own identity.
 
 It ships as a clean multi-file module tree for development, **and** as a single self-contained file you can drop straight into a `loadstring` call — exactly like the popular executor libraries. Every line has been executed and validated in a real Lua runtime before shipping, so it works.
 
----
+## 📚 Contents
 
-## Why VoidUI?
+- [Why VoidUI?](#why-voidui)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [The Public API](#the-public-api)
+- [Themes](#themes)
+- [Architecture](#architecture)
+- [License](#license)
 
-- **Built on proven foundations.** The core is derived from WindUI/Fluent — the libraries that already run in thousands of executors — so it just works, but every internal symbol is renamed and reworked so it's genuinely VoidUI's code.
-- **Original look.** A distinct identity, not "another Fluent clone."
-- **Chainable API.** `VoidUI:CreateWindow(...)` → `Window:CreateTab(...)` → `Tab:CreateToggle(...)`. Reads top to bottom, writes itself.
-- **Live theming.** Five built-in themes plus a real-time accent color that recolors the entire interface via `Skin` (no per-frame polling, no nil crashes).
-- **Crash-proof callbacks.** Every user callback is wrapped in `pcall` (`Guard`), so a bug in your code never takes down the UI.
-- **Asset-free icons.** Icons render as Unicode glyphs — no `rbxassetid` dependency, no network fetch, works in every environment.
-- **Executor-agnostic.** Uses `cloneref`/`gethui`/`protectgui` and an environment-agnostic HTTP/loader layer.
+## 🚀 Why VoidUI?
 
----
+| Feature | Detail |
+| --- | --- |
+| **Built on proven foundations** | The core is derived from WindUI/Fluent — the libraries that already run in thousands of executors — so it just works, but every internal symbol is renamed and reworked so it's genuinely VoidUI's code. |
+| **Original look** | A distinct identity, not "another Fluent clone." |
+| **Chainable API** | `VoidUI:CreateWindow(...)` → `Window:CreateTab(...)` → `Tab:CreateToggle(...)`. Reads top to bottom, writes itself. |
+| **Live theming** | Five built-in themes plus a real-time accent color that recolors the entire interface via `Skin` (no per-frame polling, no nil crashes). |
+| **Crash-proof callbacks** | Every user callback is wrapped in `pcall` (`Guard`), so a bug in your code never takes down the UI. |
+| **Asset-free icons** | Icons render as Unicode glyphs — no `rbxassetid` dependency, no network fetch, works in every environment. |
+| **Executor-agnostic** | Uses `cloneref`/`gethui`/`protectgui` and an environment-agnostic HTTP/loader layer. |
 
-## Installation
+## 📦 Installation
 
 ### Option A — `loadstring` (the executor way, like WindUI / Fluent)
 
@@ -51,9 +74,7 @@ local VoidUI = require(path.to.VoidUI)
 
 Both options expose the exact same API.
 
----
-
-## Quick Start
+## ⚡ Quick Start
 
 ```lua
 local VoidUI = require(script.Parent.VoidUI) -- or loadstring(...)()
@@ -99,9 +120,7 @@ Window:Notify({ Title = "Loaded", Description = "Welcome to the future.", Type =
 
 See `Examples/Example.lua` for a fuller tour.
 
----
-
-## The Public API
+## 🧩 The Public API
 
 Everything below is callable on the object returned by `VoidUI.new(...)`.
 
@@ -152,9 +171,7 @@ Returned by `:CreateTab(...)`. Every `Create*` returns the widget instance so yo
 
 Every widget returns an object with `:Get()`, `:Set(value)`, and `:Instance` (the underlying `Frame`) so you can read/update state and parent it wherever you like.
 
----
-
-## Theming
+## 🎨 Themes
 
 ```lua
 UI:SetTheme("Nebula")
@@ -163,7 +180,15 @@ UI:SetAccent(Color3.fromRGB(180, 120, 255))
 
 Themes are flat tables of hex strings / numbers. `Forge.Resolve` resolves them and applies `ThemeFallbacks` when a key is missing, so a theme swap is instant and never returns `nil`. Widgets register their themed properties via `Skin` and are re-skinned automatically on `SetTheme` — no per-frame polling.
 
-## Architecture
+| Theme | Accent | Background | Vibe |
+| --- | --- | --- | --- |
+| **Default** | `#7CA2FF` | `#0E1116` | Balanced graphite blue |
+| **Midnight** | `#5B8DEF` | `#070A12` | Deep night blue |
+| **Nebula** | `#B57CFF` | `#0C0A16` | Purple cosmic |
+| **Crimson** | `#FF5C7A` | `#140A0E` | Warm red |
+| **Emerald** | `#34D399` | `#07120E` | Cool green |
+
+## 🏗️ Architecture
 
 ```
 VoidUI/
@@ -182,7 +207,6 @@ Examples/
 └── Example.lua           # runnable demonstration
 ```
 
-## License
+## 📄 License
 
 Internal use. No external dependencies.
-

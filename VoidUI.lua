@@ -183,6 +183,19 @@ end
 Modules["Assets.Icons"] = function()
 local Forge = VoidRequire("Core.Forge")
 
+local RealEnum = Enum
+local Enum = setmetatable({}, {
+	__index = function(_, Category)
+		local Cat = RealEnum[Category]
+		if Cat == nil then
+			return setmetatable({}, { __index = function() return nil end })
+		end
+		return setmetatable({}, { __index = function(_, Member)
+			return Cat[Member]
+		end })
+	end,
+})
+
 local Icons = {}
 Icons.__index = Icons
 
@@ -383,6 +396,19 @@ local RunService = cloneref(game:GetService("RunService"))
 local TweenService = cloneref(game:GetService("TweenService"))
 local UserInputService = cloneref(game:GetService("UserInputService"))
 
+local RealEnum = Enum
+local Enum = setmetatable({}, {
+	__index = function(_, Category)
+		local Cat = RealEnum[Category]
+		if Cat == nil then
+			return setmetatable({}, { __index = function() return nil end })
+		end
+		return setmetatable({}, { __index = function(_, Member)
+			return Cat[Member]
+		end })
+	end,
+})
+
 local Forge = {
 	Font = Enum.Font.Gotham,
 	Theme = nil,
@@ -482,11 +508,13 @@ function Forge.Make(Name, Properties, Children)
 	local Object = Instance.new(Name)
 
 	for Property, Value in next, Forge.Defaults[Name] or {} do
-		Object[Property] = Value
+		if Value ~= nil then
+			Object[Property] = Value
+		end
 	end
 
 	for Property, Value in next, Properties or {} do
-		if Property ~= "Skin" then
+		if Property ~= "Skin" and Value ~= nil then
 			Object[Property] = Value
 		end
 	end
@@ -664,6 +692,19 @@ end
 Modules["Core.Tab"] = function()
 local Forge = VoidRequire("Core.Forge")
 local Icons = VoidRequire("Assets.Icons")
+
+local RealEnum = Enum
+local Enum = setmetatable({}, {
+	__index = function(_, Category)
+		local Cat = RealEnum[Category]
+		if Cat == nil then
+			return setmetatable({}, { __index = function() return nil end })
+		end
+		return setmetatable({}, { __index = function(_, Member)
+			return Cat[Member]
+		end })
+	end,
+})
 
 local Tab = {}
 Tab.__index = Tab
@@ -1258,6 +1299,19 @@ Modules["Core.Window"] = function()
 local Forge = VoidRequire("Core.Forge")
 local Icons = VoidRequire("Assets.Icons")
 local TabModule = VoidRequire("Core.Tab")
+
+local RealEnum = Enum
+local Enum = setmetatable({}, {
+	__index = function(_, Category)
+		local Cat = RealEnum[Category]
+		if Cat == nil then
+			return setmetatable({}, { __index = function() return nil end })
+		end
+		return setmetatable({}, { __index = function(_, Member)
+			return Cat[Member]
+		end })
+	end,
+})
 
 local Window = {}
 Window.__index = Window

@@ -2,6 +2,19 @@ local Forge = require(script.Parent.Forge)
 local Icons = require(script.Parent.Parent.Assets.Icons)
 local TabModule = require(script.Parent.Tab)
 
+local RealEnum = Enum
+local Enum = setmetatable({}, {
+	__index = function(_, Category)
+		local Cat = RealEnum[Category]
+		if Cat == nil then
+			return setmetatable({}, { __index = function() return nil end })
+		end
+		return setmetatable({}, { __index = function(_, Member)
+			return Cat[Member]
+		end })
+	end,
+})
+
 local Window = {}
 Window.__index = Window
 
