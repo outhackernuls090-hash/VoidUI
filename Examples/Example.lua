@@ -1,4 +1,5 @@
-local VoidUI = require(script.Parent.VoidUI)
+local VoidUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/outhackernuls090-hash/VoidUI/refs/heads/main/VoidUI.lua"))()
+
 
 local UI = VoidUI.new({
 	Name = "VoidUI Example",
