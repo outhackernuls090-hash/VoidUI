@@ -1,7 +1,3 @@
--- Option 1: load from the local module tree (Studio / Rojo)
--- local VoidUI = require(script.Parent.VoidUI)
-
--- Option 2: load from a URL via loadstring (executors: Synapse X, Script-Ware, KRNL, Fluxus, ...)
 local VoidUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/outhackernuls090-hash/VoidUI/refs/heads/main/VoidUI.lua"))()
 
 local UI = VoidUI.new({
@@ -13,7 +9,7 @@ local UI = VoidUI.new({
 local Window = UI:CreateWindow({
 	Title = "VoidUI",
 	Icon = "Home",
-	Size = UDim2.fromOffset(560, 420),
+	Size = UDim2.fromOffset(560, 460),
 	Position = UDim2.fromScale(0.5, 0.5),
 })
 
@@ -26,6 +22,7 @@ Combat:CreateSection({ Title = "Aimbot" })
 
 Combat:CreateToggle({
 	Title = "Enable Aimbot",
+	Description = "Locks onto the nearest target",
 	Default = false,
 	Callback = function(Value)
 		print("Aimbot:", Value)
@@ -59,14 +56,61 @@ Combat:CreateColorPicker({
 	end,
 })
 
+Combat:CreateKeybind({
+	Title = "Toggle Menu",
+	Default = Enum.KeyCode.RightShift,
+	Callback = function(Key)
+		print("Keybind:", Key)
+	end,
+})
+
 local Visuals = Window:CreateTab({
 	Title = "Visuals",
 	Icon = "Eye",
 })
 
+Visuals:CreateSection({ Title = "Rendering" })
+
 Visuals:CreateToggle({ Title = "ESP", Default = true })
 Visuals:CreateSlider({ Title = "Brightness", Min = 0, Max = 100, Default = 50 })
-Visuals:CreateKeybind({ Title = "Toggle Menu", Default = Enum.KeyCode.RightShift })
+Visuals:CreateTextbox({
+	Title = "Watermark Text",
+	Default = "VoidUI",
+	Placeholder = "Type here...",
+	Callback = function(Value)
+		print("Text:", Value)
+	end,
+})
+
+Visuals:CreateDivider()
+
+Visuals:CreateLabel({ Title = "Status: running" })
+Visuals:CreateParagraph({
+	Title = "About",
+	Content = "VoidUI is a restyled, executor-agnostic GUI framework built on a proven core.",
+})
+
+local Misc = Window:CreateTab({
+	Title = "Misc",
+	Icon = "Settings",
+})
+
+Misc:CreateButton({
+	Title = "Destroy UI",
+	Callback = function()
+		Window:Close()
+	end,
+})
+
+Misc:CreateDropdown({
+	Title = "Multi Select",
+	Options = { "A", "B", "C" },
+	Default = { "A" },
+	Multi = true,
+	Callback = function(Value)
+		print("Selected:", table.concat(Value, ", "))
+	end,
+})
 
 UI:Notify({
 	Title = "VoidUI Loaded",
