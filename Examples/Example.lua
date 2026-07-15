@@ -1,6 +1,3 @@
--- VoidUI example — runnable demonstration of the single-file framework.
--- Load the bundled file, then build a window with every widget type.
-
 local VoidUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/outhackernuls090-hash/VoidUI/refs/heads/main/VoidUI.lua"))()
 
 local UI = VoidUI.new({
