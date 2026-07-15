@@ -1,6 +1,6 @@
 
 local VoidUI = {}
-VoidUI.Version = "4.0.0"
+VoidUI.Version = "4.0.1"
 
 local cloneref = (cloneref or clonereference or function(i) return i end)
 
@@ -13,21 +13,16 @@ local CoreGui         = cloneref(game:GetService("CoreGui"))
 local ProtectGui = protectgui or (syn and syn.protect_gui) or function() end
 local GUIParent  = (gethui and gethui()) or CoreGui or Players.LocalPlayer:WaitForChild("PlayerGui")
 
-local RealEnum = Enum
-local Enum = setmetatable({}, {
-	__index = function(_, Category)
-		local Cat = RealEnum[Category]
-		if Cat == nil then
-			return setmetatable({}, { __index = function() return nil end })
-		end
-		return setmetatable({}, { __index = function(_, Member)
-			return Cat[Member]
-		end })
-	end,
-})
+local function GetEnum(Category, Member)
+	local ok, Cat = pcall(function() return Enum[Category] end)
+	if not ok or Cat == nil then return nil end
+	local ok2, Val = pcall(function() return Cat[Member] end)
+	if not ok2 then return nil end
+	return Val
+end
 
 local Forge = {
-	Font = Enum.Font.Gotham,
+	Font = GetEnum("Font", "Gotham"),
 	Theme = nil,
 	Themes = nil,
 	ThemeFallbacks = nil,
@@ -37,27 +32,27 @@ local Forge = {
 }
 
 Forge.Defaults = {
-	ScreenGui = { ResetOnSpawn = false, ZIndexBehavior = Enum.ZIndexBehavior.Sibling },
+	ScreenGui = { ResetOnSpawn = false, ZIndexBehavior = GetEnum("ZIndexBehavior", "Sibling") },
 	CanvasGroup = { BorderSizePixel = 0, BackgroundColor3 = Color3.new(1, 1, 1) },
 	Frame = { BorderSizePixel = 0, BackgroundColor3 = Color3.new(1, 1, 1) },
 	TextLabel = {
 		BackgroundColor3 = Color3.new(1, 1, 1), BorderSizePixel = 0, Text = "",
 		RichText = true, TextColor3 = Color3.new(1, 1, 1), TextSize = 14,
-		FontFace = Font.fromEnum(Enum.Font.Gotham),
+		FontFace = Font.fromEnum(GetEnum("Font", "Gotham")),
 	},
 	TextButton = {
 		BackgroundColor3 = Color3.new(1, 1, 1), BorderSizePixel = 0, Text = "",
 		AutoButtonColor = false, TextColor3 = Color3.new(1, 1, 1), TextSize = 14,
-		FontFace = Font.fromEnum(Enum.Font.Gotham),
+		FontFace = Font.fromEnum(GetEnum("Font", "Gotham")),
 	},
 	TextBox = {
 		BackgroundColor3 = Color3.new(1, 1, 1), BorderColor3 = Color3.new(0, 0, 0),
 		ClearTextOnFocus = false, Text = "", TextColor3 = Color3.new(0, 0, 0),
-		TextSize = 14, FontFace = Font.fromEnum(Enum.Font.Gotham),
+		TextSize = 14, FontFace = Font.fromEnum(GetEnum("Font", "Gotham")),
 	},
 	ImageLabel = { BackgroundTransparency = 1, BackgroundColor3 = Color3.new(1, 1, 1), BorderSizePixel = 0 },
 	ImageButton = { BackgroundColor3 = Color3.new(1, 1, 1), BorderSizePixel = 0, AutoButtonColor = false },
-	UIListLayout = { SortOrder = Enum.SortOrder.LayoutOrder },
+	UIListLayout = { SortOrder = GetEnum("SortOrder", "LayoutOrder") },
 	UIPadding = {
 		PaddingLeft = UDim.new(0, 0), PaddingRight = UDim.new(0, 0),
 		PaddingTop = UDim.new(0, 0), PaddingBottom = UDim.new(0, 0),
@@ -66,8 +61,8 @@ Forge.Defaults = {
 	UICorner = { CornerRadius = UDim.new(0, 0) },
 	ScrollingFrame = {
 		ScrollBarImageTransparency = 1, BorderSizePixel = 0, BackgroundColor3 = Color3.new(1, 1, 1),
-		AutomaticCanvasSize = Enum.AutomaticCanvasSize.Y, ScrollingDirection = Enum.ScrollingDirection.Y,
-		VerticalScrollBarPosition = Enum.VerticalScrollBarPosition.Left,
+		AutomaticCanvasSize = GetEnum("AutomaticCanvasSize", "Y"), ScrollingDirection = GetEnum("ScrollingDirection", "Y"),
+		VerticalScrollBarPosition = GetEnum("VerticalScrollBarPosition", "Left"),
 	},
 }
 
@@ -199,7 +194,7 @@ end
 
 function Forge.Spring(Object, Property, Target, Options)
 	Options = Options or {}
-	local Tween = Forge.Tween(Object, Options.Duration or 0.3, { [Property] = Target }, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+	local Tween = Forge.Tween(Object, Options.Duration or 0.3, { [Property] = Target }, GetEnum("EasingStyle", "Quad"), GetEnum("EasingDirection", "Out"))
 	Tween:Play()
 	return Tween
 end
@@ -338,11 +333,11 @@ function Icons.Create(Name, Color, Size)
 		Text = Glyph,
 		TextSize = Size or 18,
 		TextColor3 = Color or Color3.fromHex("#E6EAF2"),
-		TextXAlignment = Enum.TextXAlignment.Center,
-		TextYAlignment = Enum.TextYAlignment.Center,
+		TextXAlignment = GetEnum("TextXAlignment", "Center"),
+		TextYAlignment = GetEnum("TextYAlignment", "Center"),
 		BackgroundTransparency = 1,
 		Size = UDim2.fromOffset(Size or 18, Size or 18),
-		FontFace = Font.fromEnum(Enum.Font.Gotham),
+		FontFace = Font.fromEnum(GetEnum("Font", "Gotham")),
 		Skin = { TextColor3 = "Text" },
 	})
 end
@@ -373,15 +368,15 @@ function Tab.new(Window, Options)
 	}, {
 		Forge.Make("UICorner", { CornerRadius = UDim.new(0, 8) }),
 		Forge.Make("UIListLayout", {
-			FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 10),
-			VerticalAlignment = Enum.VerticalAlignment.Center, SortOrder = Enum.SortOrder.LayoutOrder,
+			FillDirection = GetEnum("FillDirection", "Horizontal"), Padding = UDim.new(0, 10),
+			VerticalAlignment = GetEnum("VerticalAlignment", "Center"), SortOrder = GetEnum("SortOrder", "LayoutOrder"),
 		}),
 		Forge.Make("UIPadding", { PaddingLeft = UDim.new(0, 12) }),
 		Icons.Create(self.Icon, Theme.TextDim, 18),
 		Forge.Make("TextLabel", {
-			Text = self.Title, TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left,
+			Text = self.Title, TextSize = 14, TextXAlignment = GetEnum("TextXAlignment", "Left"),
 			TextColor3 = Theme.TextDim, Size = UDim2.new(1, -40, 1, 0),
-			FontFace = Font.fromEnum(Enum.Font.Gotham), Skin = { TextColor3 = "TextDim" },
+			FontFace = Font.fromEnum(GetEnum("Font", "Gotham")), Skin = { TextColor3 = "TextDim" },
 		}),
 	})
 	Button.MouseButton1Click:Connect(function() Window:SelectTab(self) end)
@@ -389,12 +384,12 @@ function Tab.new(Window, Options)
 
 	local Section = Forge.Make("Frame", {
 		Name = "TabContent", BackgroundTransparency = 1, BorderSizePixel = 0,
-		Size = UDim2.new(1, 0, 0, 0), AutomaticSize = Enum.AutomaticSize.Y,
+		Size = UDim2.new(1, 0, 0, 0), AutomaticSize = GetEnum("AutomaticSize", "Y"),
 		Visible = false, Parent = Window.Content,
 	}, {
 		Forge.Make("UIListLayout", {
-			FillDirection = Enum.FillDirection.Vertical, Padding = UDim.new(0, 8),
-			SortOrder = Enum.SortOrder.LayoutOrder,
+			FillDirection = GetEnum("FillDirection", "Vertical"), Padding = UDim.new(0, 8),
+			SortOrder = GetEnum("SortOrder", "LayoutOrder"),
 		}),
 	})
 	self.Section = Section
@@ -423,20 +418,20 @@ function Tab:_Row(Title, Desc)
 		Size = UDim2.new(1, 0, 0, Desc and 46 or 36), BackgroundTransparency = 1, Parent = self.Section,
 	}, {
 		Forge.Make("UIListLayout", {
-			FillDirection = Enum.FillDirection.Vertical, Padding = UDim.new(0, 2),
-			SortOrder = Enum.SortOrder.LayoutOrder,
+			FillDirection = GetEnum("FillDirection", "Vertical"), Padding = UDim.new(0, 2),
+			SortOrder = GetEnum("SortOrder", "LayoutOrder"),
 		}),
 		Forge.Make("TextLabel", {
-			Text = Title or "", TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left,
+			Text = Title or "", TextSize = 14, TextXAlignment = GetEnum("TextXAlignment", "Left"),
 			TextColor3 = Theme.Text, Size = UDim2.new(1, 0, 0, Desc and 18 or 36),
-			FontFace = Font.fromEnum(Enum.Font.Gotham), Skin = { TextColor3 = "Text" },
+			FontFace = Font.fromEnum(GetEnum("Font", "Gotham")), Skin = { TextColor3 = "Text" },
 		}),
 	})
 	if Desc then
 		Forge.Make("TextLabel", {
-			Text = Desc, TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left,
+			Text = Desc, TextSize = 12, TextXAlignment = GetEnum("TextXAlignment", "Left"),
 			TextColor3 = Theme.TextDim, Size = UDim2.new(1, 0, 0, 16),
-			FontFace = Font.fromEnum(Enum.Font.Gotham), Skin = { TextColor3 = "TextDim" }, Parent = Row,
+			FontFace = Font.fromEnum(GetEnum("Font", "Gotham")), Skin = { TextColor3 = "TextDim" }, Parent = Row,
 		})
 	end
 	return Row
@@ -449,13 +444,13 @@ function Tab:CreateSection(Options)
 		Size = UDim2.new(1, 0, 0, 30), BackgroundTransparency = 1, Parent = self.Section,
 	}, {
 		Forge.Make("UIListLayout", {
-			FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 8),
-			VerticalAlignment = Enum.VerticalAlignment.Center, SortOrder = Enum.SortOrder.LayoutOrder,
+			FillDirection = GetEnum("FillDirection", "Horizontal"), Padding = UDim.new(0, 8),
+			VerticalAlignment = GetEnum("VerticalAlignment", "Center"), SortOrder = GetEnum("SortOrder", "LayoutOrder"),
 		}),
 		Forge.Make("TextLabel", {
-			Text = Options.Title or "Section", TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left,
+			Text = Options.Title or "Section", TextSize = 13, TextXAlignment = GetEnum("TextXAlignment", "Left"),
 			TextColor3 = Theme.Accent, Size = UDim2.new(0, 0, 1, 0),
-			FontFace = Font.fromEnum(Enum.Font.Gotham), Skin = { TextColor3 = "Accent" },
+			FontFace = Font.fromEnum(GetEnum("Font", "Gotham")), Skin = { TextColor3 = "Accent" },
 		}),
 		Forge.Make("Frame", {
 			BackgroundColor3 = Theme.Border, Size = UDim2.new(1, -10, 0, 1),
@@ -477,9 +472,9 @@ function Tab:CreateLabel(Options)
 	Options = Options or {}
 	local Theme = self.Window.VoidUI.Themes[self.Window.VoidUI.CurrentTheme]
 	return Forge.Make("TextLabel", {
-		Text = Options.Title or "", TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left,
+		Text = Options.Title or "", TextSize = 14, TextXAlignment = GetEnum("TextXAlignment", "Left"),
 		TextColor3 = Theme.Text, Size = UDim2.new(1, 0, 0, 24),
-		FontFace = Font.fromEnum(Enum.Font.Gotham), Parent = self.Section, Skin = { TextColor3 = "Text" },
+		FontFace = Font.fromEnum(GetEnum("Font", "Gotham")), Parent = self.Section, Skin = { TextColor3 = "Text" },
 	})
 end
 
@@ -492,19 +487,19 @@ function Tab:CreateParagraph(Options)
 	}, {
 		Forge.Make("UICorner", { CornerRadius = UDim.new(0, 10) }),
 		Forge.Make("UIListLayout", {
-			FillDirection = Enum.FillDirection.Vertical, Padding = UDim.new(0, 4),
-			SortOrder = Enum.SortOrder.LayoutOrder,
+			FillDirection = GetEnum("FillDirection", "Vertical"), Padding = UDim.new(0, 4),
+			SortOrder = GetEnum("SortOrder", "LayoutOrder"),
 		}),
 		Forge.Make("UIPadding", { PaddingLeft = UDim.new(0, 12), PaddingRight = UDim.new(0, 12), PaddingTop = UDim.new(0, 10), PaddingBottom = UDim.new(0, 10) }),
 		Forge.Make("TextLabel", {
-			Text = Options.Title or "", TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left,
+			Text = Options.Title or "", TextSize = 14, TextXAlignment = GetEnum("TextXAlignment", "Left"),
 			TextColor3 = Theme.Text, Size = UDim2.new(1, 0, 0, 18),
-			FontFace = Font.fromEnum(Enum.Font.Gotham), Skin = { TextColor3 = "Text" },
+			FontFace = Font.fromEnum(GetEnum("Font", "Gotham")), Skin = { TextColor3 = "Text" },
 		}),
 		Forge.Make("TextLabel", {
-			Text = Options.Content or "", TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left,
+			Text = Options.Content or "", TextSize = 12, TextXAlignment = GetEnum("TextXAlignment", "Left"),
 			TextColor3 = Theme.TextDim, Size = UDim2.new(1, 0, 0, 28), TextWrapped = true,
-			FontFace = Font.fromEnum(Enum.Font.Gotham), Skin = { TextColor3 = "TextDim" },
+			FontFace = Font.fromEnum(GetEnum("Font", "Gotham")), Skin = { TextColor3 = "TextDim" },
 		}),
 	})
 end
@@ -520,9 +515,9 @@ function Tab:CreateToggle(Options)
 		Size = UDim2.new(1, 0, 0, 24), BackgroundTransparency = 1, Parent = Row,
 	}, {
 		Forge.Make("UIListLayout", {
-			FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 0),
-			VerticalAlignment = Enum.VerticalAlignment.Center, HorizontalAlignment = Enum.HorizontalAlignment.Right,
-			SortOrder = Enum.SortOrder.LayoutOrder,
+			FillDirection = GetEnum("FillDirection", "Horizontal"), Padding = UDim.new(0, 0),
+			VerticalAlignment = GetEnum("VerticalAlignment", "Center"), HorizontalAlignment = GetEnum("HorizontalAlignment", "Right"),
+			SortOrder = GetEnum("SortOrder", "LayoutOrder"),
 		}),
 	})
 
@@ -565,8 +560,8 @@ function Tab:CreateSlider(Options)
 		Size = UDim2.new(1, 0, 0, 26), BackgroundTransparency = 1, Parent = Row,
 	}, {
 		Forge.Make("UIListLayout", {
-			FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 10),
-			VerticalAlignment = Enum.VerticalAlignment.Center, SortOrder = Enum.SortOrder.LayoutOrder,
+			FillDirection = GetEnum("FillDirection", "Horizontal"), Padding = UDim.new(0, 10),
+			VerticalAlignment = GetEnum("VerticalAlignment", "Center"), SortOrder = GetEnum("SortOrder", "LayoutOrder"),
 		}),
 	})
 
@@ -580,9 +575,9 @@ function Tab:CreateSlider(Options)
 	}, { Forge.Make("UICorner", { CornerRadius = UDim.new(1, 0) }), Fill })
 
 	local ValueLabel = Forge.Make("TextLabel", {
-		Text = tostring(Value), TextSize = 13, TextXAlignment = Enum.TextXAlignment.Right,
+		Text = tostring(Value), TextSize = 13, TextXAlignment = GetEnum("TextXAlignment", "Right"),
 		TextColor3 = Theme.Text, Size = UDim2.new(0, 50, 1, 0),
-		FontFace = Font.fromEnum(Enum.Font.Gotham), Skin = { TextColor3 = "Text" }, Parent = Control,
+		FontFace = Font.fromEnum(GetEnum("Font", "Gotham")), Skin = { TextColor3 = "Text" }, Parent = Control,
 	})
 
 	local function SetValue(newVal)
@@ -602,12 +597,12 @@ function Tab:CreateSlider(Options)
 
 	local dragging
 	Bar.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		if input.UserInputType == GetEnum("UserInputType", "MouseButton")1 or input.UserInputType == GetEnum("UserInputType", "Touch") then
 			dragging = true
 		end
 	end)
 	Bar.InputChanged:Connect(function(input)
-		if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+		if dragging and (input.UserInputType == GetEnum("UserInputType", "MouseMovement") or input.UserInputType == GetEnum("UserInputType", "Touch")) then
 			local absPos = Bar.AbsolutePosition
 			local absSize = Bar.AbsoluteSize
 			local ratio = math.clamp((input.Position.X - absPos.X) / absSize.X, 0, 1)
@@ -615,7 +610,7 @@ function Tab:CreateSlider(Options)
 		end
 	end)
 	Bar.InputEnded:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		if input.UserInputType == GetEnum("UserInputType", "MouseButton")1 or input.UserInputType == GetEnum("UserInputType", "Touch") then
 			dragging = false
 		end
 	end)
@@ -643,14 +638,14 @@ function Tab:CreateDropdown(Options)
 	}, {
 		Forge.Make("UICorner", { CornerRadius = UDim.new(0, 8) }),
 		Forge.Make("UIListLayout", {
-			FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 8),
-			VerticalAlignment = Enum.VerticalAlignment.Center, SortOrder = Enum.SortOrder.LayoutOrder,
+			FillDirection = GetEnum("FillDirection", "Horizontal"), Padding = UDim.new(0, 8),
+			VerticalAlignment = GetEnum("VerticalAlignment", "Center"), SortOrder = GetEnum("SortOrder", "LayoutOrder"),
 		}),
 		Forge.Make("UIPadding", { PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10) }),
 		Forge.Make("TextLabel", {
 			Name = "Current", Text = Multi and (#Value > 0 and table.concat(Value, ", ") or "None") or tostring(Value or "None"),
-			TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left, TextColor3 = Theme.Text,
-			Size = UDim2.new(1, -24, 1, 0), FontFace = Font.fromEnum(Enum.Font.Gotham), Skin = { TextColor3 = "Text" },
+			TextSize = 13, TextXAlignment = GetEnum("TextXAlignment", "Left"), TextColor3 = Theme.Text,
+			Size = UDim2.new(1, -24, 1, 0), FontFace = Font.fromEnum(GetEnum("Font", "Gotham")), Skin = { TextColor3 = "Text" },
 		}),
 		Icons.Create("ChevronDown", Theme.TextDim, 16),
 	})
@@ -658,11 +653,11 @@ function Tab:CreateDropdown(Options)
 
 	local Popup = Forge.Make("Frame", {
 		Name = "DropdownPopup", BackgroundColor3 = Theme.BackgroundElevated, Visible = false,
-		AutomaticSize = Enum.AutomaticSize.Y, ZIndex = 500, Skin = { BackgroundColor3 = "BackgroundElevated" },
+		AutomaticSize = GetEnum("AutomaticSize", "Y"), ZIndex = 500, Skin = { BackgroundColor3 = "BackgroundElevated" },
 	}, {
 		Forge.Make("UICorner", { CornerRadius = UDim.new(0, 8) }),
 		Forge.Make("UIStroke", { Color = Theme.Border, Thickness = 1, Transparency = 0.4, Skin = { Color = "Border" } }),
-		Forge.Make("UIListLayout", { FillDirection = Enum.FillDirection.Vertical, Padding = UDim.new(0, 4), SortOrder = Enum.SortOrder.LayoutOrder }),
+		Forge.Make("UIListLayout", { FillDirection = GetEnum("FillDirection", "Vertical"), Padding = UDim.new(0, 4), SortOrder = GetEnum("SortOrder", "LayoutOrder") }),
 		Forge.Make("UIPadding", { PaddingLeft = UDim.new(0, 6), PaddingRight = UDim.new(0, 6), PaddingTop = UDim.new(0, 6), PaddingBottom = UDim.new(0, 6) }),
 	})
 	Popup.Parent = self.Window.VoidUI.Overlays
@@ -675,9 +670,9 @@ function Tab:CreateDropdown(Options)
 			local selected = Multi and table.find(Value, item) or (Value == item)
 			local opt = Forge.Make("TextButton", {
 				Size = UDim2.new(1, 0, 0, 28), Text = (selected and "✓ " or "") .. tostring(item),
-				TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left, TextColor3 = selected and Theme.Accent or Theme.Text,
+				TextSize = 13, TextXAlignment = GetEnum("TextXAlignment", "Left"), TextColor3 = selected and Theme.Accent or Theme.Text,
 				BackgroundColor3 = selected and Theme.SurfaceHover or Theme.Surface, AutoButtonColor = false,
-				FontFace = Font.fromEnum(Enum.Font.Gotham), ZIndex = 501,
+				FontFace = Font.fromEnum(GetEnum("Font", "Gotham")), ZIndex = 501,
 				Skin = { TextColor3 = selected and "Accent" or "Text", BackgroundColor3 = selected and "SurfaceHover" or "Surface" },
 			}, { Forge.Make("UICorner", { CornerRadius = UDim.new(0, 6) }),
 				Forge.Make("UIPadding", { PaddingLeft = UDim.new(0, 8) }) })
@@ -733,7 +728,7 @@ function Tab:CreateColorPicker(Options)
 	}, {
 		Forge.Make("UICorner", { CornerRadius = UDim.new(0, 10) }),
 		Forge.Make("UIStroke", { Color = Theme.Border, Thickness = 1, Transparency = 0.4, Skin = { Color = "Border" } }),
-		Forge.Make("UIListLayout", { FillDirection = Enum.FillDirection.Vertical, Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder }),
+		Forge.Make("UIListLayout", { FillDirection = GetEnum("FillDirection", "Vertical"), Padding = UDim.new(0, 8), SortOrder = GetEnum("SortOrder", "LayoutOrder") }),
 		Forge.Make("UIPadding", { PaddingLeft = UDim.new(0, 10), PaddingRight = UDim.new(0, 10), PaddingTop = UDim.new(0, 10), PaddingBottom = UDim.new(0, 10) }),
 	})
 	Popup.Parent = self.Window.VoidUI.Overlays
@@ -747,7 +742,7 @@ function Tab:CreateColorPicker(Options)
 	}, { Forge.Make("UICorner", { CornerRadius = UDim.new(1, 0) }) })
 	local HexLabel = Forge.Make("TextLabel", {
 		Size = UDim2.new(1, 0, 0, 18), Text = "", TextSize = 12, TextColor3 = Theme.Text,
-		FontFace = Font.fromEnum(Enum.Font.Gotham), BackgroundTransparency = 1, ZIndex = 501,
+		FontFace = Font.fromEnum(GetEnum("Font", "Gotham")), BackgroundTransparency = 1, ZIndex = 501,
 		Skin = { TextColor3 = "Text" },
 	})
 	SatVal.Parent = Popup; HueBar.Parent = Popup; HexLabel.Parent = Popup
@@ -805,32 +800,32 @@ function Tab:CreateColorPicker(Options)
 	end
 
 	SatVal.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		if input.UserInputType == GetEnum("UserInputType", "MouseButton")1 or input.UserInputType == GetEnum("UserInputType", "Touch") then
 			svDragging = true; UpdateFromSV()
 		end
 	end)
 	SatVal.InputChanged:Connect(function(input)
-		if svDragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+		if svDragging and (input.UserInputType == GetEnum("UserInputType", "MouseMovement") or input.UserInputType == GetEnum("UserInputType", "Touch")) then
 			UpdateFromSV()
 		end
 	end)
 	SatVal.InputEnded:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		if input.UserInputType == GetEnum("UserInputType", "MouseButton")1 or input.UserInputType == GetEnum("UserInputType", "Touch") then
 			svDragging = false
 		end
 	end)
 	HueBar.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		if input.UserInputType == GetEnum("UserInputType", "MouseButton")1 or input.UserInputType == GetEnum("UserInputType", "Touch") then
 			hueDragging = true; UpdateFromHue()
 		end
 	end)
 	HueBar.InputChanged:Connect(function(input)
-		if hueDragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+		if hueDragging and (input.UserInputType == GetEnum("UserInputType", "MouseMovement") or input.UserInputType == GetEnum("UserInputType", "Touch")) then
 			UpdateFromHue()
 		end
 	end)
 	HueBar.InputEnded:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		if input.UserInputType == GetEnum("UserInputType", "MouseButton")1 or input.UserInputType == GetEnum("UserInputType", "Touch") then
 			hueDragging = false
 		end
 	end)
@@ -858,13 +853,13 @@ end
 function Tab:CreateKeybind(Options)
 	Options = Options or {}
 	local Theme = self.Window.VoidUI.Themes[self.Window.VoidUI.CurrentTheme]
-	local Value = Options.Default or Enum.KeyCode.RightShift
+	local Value = Options.Default or GetEnum("KeyCode", "RightShift")
 	local Callback = Options.Callback or function() end
 
 	local Row = self:_Row(Options.Title, Options.Description)
 	local Button = Forge.Make("TextButton", {
 		Size = UDim2.fromOffset(120, 28), BackgroundColor3 = Theme.Surface, Text = tostring(Value),
-		TextSize = 13, TextColor3 = Theme.Text, Parent = Row, FontFace = Font.fromEnum(Enum.Font.Gotham),
+		TextSize = 13, TextColor3 = Theme.Text, Parent = Row, FontFace = Font.fromEnum(GetEnum("Font", "Gotham")),
 		Skin = { BackgroundColor3 = "Surface", TextColor3 = "Text" },
 	}, { Forge.Make("UICorner", { CornerRadius = UDim.new(0, 6) }) })
 
@@ -875,7 +870,7 @@ function Tab:CreateKeybind(Options)
 		local conn
 		conn = UserInputService.InputBegan:Connect(function(input, gp)
 			if gp then return end
-			if input.UserInputType == Enum.UserInputType.Keyboard then
+			if input.UserInputType == GetEnum("UserInputType", "Keyboard") then
 				Value = input.KeyCode
 				listening = false
 				Forge.Guard(function() Button.Text = tostring(Value) end)
@@ -901,7 +896,7 @@ function Tab:CreateTextbox(Options)
 	local Box = Forge.Make("TextBox", {
 		Size = UDim2.new(1, 0, 0, 30), BackgroundColor3 = Theme.Surface, Text = Value,
 		PlaceholderText = Options.Placeholder or "", TextSize = 13, TextColor3 = Theme.Text,
-		ClearTextOnFocus = false, Parent = Row, FontFace = Font.fromEnum(Enum.Font.Gotham),
+		ClearTextOnFocus = false, Parent = Row, FontFace = Font.fromEnum(GetEnum("Font", "Gotham")),
 		Skin = { BackgroundColor3 = "Surface", TextColor3 = "Text" },
 	}, { Forge.Make("UICorner", { CornerRadius = UDim.new(0, 8) }),
 		Forge.Make("UIPadding", { PaddingLeft = UDim.new(0, 10) }) })
@@ -921,7 +916,7 @@ function Tab:CreateButton(Options)
 	local Button = Forge.Make("TextButton", {
 		Size = UDim2.new(1, 0, 0, 34), BackgroundColor3 = Theme.Accent, Text = Options.Title or "Button",
 		TextSize = 14, TextColor3 = Color3.fromHex("#0E1116"), Parent = self.Section,
-		FontFace = Font.fromEnum(Enum.Font.Gotham), Skin = { BackgroundColor3 = "Accent" },
+		FontFace = Font.fromEnum(GetEnum("Font", "Gotham")), Skin = { BackgroundColor3 = "Accent" },
 	}, { Forge.Make("UICorner", { CornerRadius = UDim.new(0, 8) }) })
 	Button.MouseButton1Click:Connect(function() Forge.Guard(Callback) end)
 
@@ -981,8 +976,8 @@ function Window:_Build(WindowsFolder, NotifFolder)
 		ZIndex = self.ZIndex + 2, Parent = Header,
 	}, {
 		Forge.Make("UIListLayout", {
-			FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 12),
-			VerticalAlignment = Enum.VerticalAlignment.Center, SortOrder = Enum.SortOrder.LayoutOrder,
+			FillDirection = GetEnum("FillDirection", "Horizontal"), Padding = UDim.new(0, 12),
+			VerticalAlignment = GetEnum("VerticalAlignment", "Center"), SortOrder = GetEnum("SortOrder", "LayoutOrder"),
 		}),
 		Forge.Make("UIPadding", { PaddingLeft = UDim.new(0, 16), PaddingRight = UDim.new(0, 12) }),
 	})
@@ -996,16 +991,16 @@ function Window:_Build(WindowsFolder, NotifFolder)
 		ZIndex = self.ZIndex + 2, Parent = HeaderContent,
 	}, {
 		Forge.Make("UIListLayout", {
-			FillDirection = Enum.FillDirection.Vertical, Padding = UDim.new(0, 0),
-			VerticalAlignment = Enum.VerticalAlignment.Center, SortOrder = Enum.SortOrder.LayoutOrder,
+			FillDirection = GetEnum("FillDirection", "Vertical"), Padding = UDim.new(0, 0),
+			VerticalAlignment = GetEnum("VerticalAlignment", "Center"), SortOrder = GetEnum("SortOrder", "LayoutOrder"),
 		}),
 		Forge.Make("TextLabel", {
-			Name = "Title", Text = self.Title, TextSize = 16, TextXAlignment = Enum.TextXAlignment.Left,
-			TextColor3 = Theme.Text, Size = UDim2.new(1, 0, 0, 18), FontFace = Font.fromEnum(Enum.Font.Gotham),
+			Name = "Title", Text = self.Title, TextSize = 16, TextXAlignment = GetEnum("TextXAlignment", "Left"),
+			TextColor3 = Theme.Text, Size = UDim2.new(1, 0, 0, 18), FontFace = Font.fromEnum(GetEnum("Font", "Gotham")),
 			Skin = { TextColor3 = "Text" },
 		}),
 		Forge.Make("TextLabel", {
-			Name = "Subtitle", Text = self.Subtitle, TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left,
+			Name = "Subtitle", Text = self.Subtitle, TextSize = 12, TextXAlignment = GetEnum("TextXAlignment", "Left"),
 			TextColor3 = Theme.TextDim, Size = UDim2.new(1, 0, 0, 14), Visible = #self.Subtitle > 0,
 			Skin = { TextColor3 = "TextDim" },
 		}),
@@ -1015,7 +1010,7 @@ function Window:_Build(WindowsFolder, NotifFolder)
 	local SearchBox = Forge.Make("TextBox", {
 		Size = UDim2.new(0, 120, 0, 26), BackgroundColor3 = Theme.Surface, Text = "",
 		PlaceholderText = "Search...", TextSize = 12, TextColor3 = Theme.Text,
-		ClearTextOnFocus = false, ZIndex = self.ZIndex + 2, FontFace = Font.fromEnum(Enum.Font.Gotham),
+		ClearTextOnFocus = false, ZIndex = self.ZIndex + 2, FontFace = Font.fromEnum(GetEnum("Font", "Gotham")),
 		Skin = { BackgroundColor3 = "Surface", TextColor3 = "Text" },
 	}, { Forge.Make("UICorner", { CornerRadius = UDim.new(0, 6) }),
 		Forge.Make("UIPadding", { PaddingLeft = UDim.new(0, 8) }) })
@@ -1034,9 +1029,9 @@ function Window:_Build(WindowsFolder, NotifFolder)
 		ZIndex = self.ZIndex + 2, Parent = HeaderContent,
 	}, {
 		Forge.Make("UIListLayout", {
-			FillDirection = Enum.FillDirection.Horizontal, Padding = UDim.new(0, 6),
-			VerticalAlignment = Enum.VerticalAlignment.Center, HorizontalAlignment = Enum.HorizontalAlignment.Right,
-			SortOrder = Enum.SortOrder.LayoutOrder,
+			FillDirection = GetEnum("FillDirection", "Horizontal"), Padding = UDim.new(0, 6),
+			VerticalAlignment = GetEnum("VerticalAlignment", "Center"), HorizontalAlignment = GetEnum("HorizontalAlignment", "Right"),
+			SortOrder = GetEnum("SortOrder", "LayoutOrder"),
 		}),
 	})
 	Controls.LayoutOrder = 3
@@ -1058,8 +1053,8 @@ function Window:_Build(WindowsFolder, NotifFolder)
 	}, {
 		Forge.Make("UICorner", { CornerRadius = UDim.new(0, Theme.Radius or 12) }),
 		Forge.Make("UIListLayout", {
-			FillDirection = Enum.FillDirection.Vertical, Padding = UDim.new(0, 6),
-			HorizontalAlignment = Enum.HorizontalAlignment.Center, SortOrder = Enum.SortOrder.LayoutOrder,
+			FillDirection = GetEnum("FillDirection", "Vertical"), Padding = UDim.new(0, 6),
+			HorizontalAlignment = GetEnum("HorizontalAlignment", "Center"), SortOrder = GetEnum("SortOrder", "LayoutOrder"),
 		}),
 		Forge.Make("UIPadding", { PaddingTop = UDim.new(0, 10), PaddingBottom = UDim.new(0, 10) }),
 	})
@@ -1071,7 +1066,7 @@ function Window:_Build(WindowsFolder, NotifFolder)
 		CanvasSize = UDim2.new(0, 0, 0, 0), Parent = Body, Skin = { ScrollBarImageColor3 = "Scrollbar" },
 	}, {
 		Forge.Make("UIListLayout", {
-			FillDirection = Enum.FillDirection.Vertical, Padding = UDim.new(0, 8), SortOrder = Enum.SortOrder.LayoutOrder,
+			FillDirection = GetEnum("FillDirection", "Vertical"), Padding = UDim.new(0, 8), SortOrder = GetEnum("SortOrder", "LayoutOrder"),
 		}),
 		Forge.Make("UIPadding", { PaddingLeft = UDim.new(0, 14), PaddingRight = UDim.new(0, 14), PaddingTop = UDim.new(0, 12), PaddingBottom = UDim.new(0, 12) }),
 	})
@@ -1111,20 +1106,20 @@ function Window:_EnableDrag()
 	if not self.Draggable then return end
 	local dragging, dragStart, startPos
 	self.Header.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		if input.UserInputType == GetEnum("UserInputType", "MouseButton")1 or input.UserInputType == GetEnum("UserInputType", "Touch") then
 			dragging = true
 			dragStart = input.Position
 			startPos = self.Main.Position
 		end
 	end)
 	self.Header.InputChanged:Connect(function(input)
-		if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+		if dragging and (input.UserInputType == GetEnum("UserInputType", "MouseMovement") or input.UserInputType == GetEnum("UserInputType", "Touch")) then
 			local delta = input.Position - dragStart
 			self.Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
 		end
 	end)
 	self.Header.InputEnded:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		if input.UserInputType == GetEnum("UserInputType", "MouseButton")1 or input.UserInputType == GetEnum("UserInputType", "Touch") then
 			dragging = false
 		end
 	end)
@@ -1134,12 +1129,12 @@ function Window:_EnableResize()
 	if not self.Resizable then return end
 	local resizing
 	self.ResizeHandle.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		if input.UserInputType == GetEnum("UserInputType", "MouseButton")1 or input.UserInputType == GetEnum("UserInputType", "Touch") then
 			resizing = true
 		end
 	end)
 	self.ResizeHandle.InputChanged:Connect(function(input)
-		if resizing and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+		if resizing and (input.UserInputType == GetEnum("UserInputType", "MouseMovement") or input.UserInputType == GetEnum("UserInputType", "Touch")) then
 			local mouse = UserInputService:GetMouseLocation()
 			local absPos = self.Main.AbsolutePosition
 			local newW = math.clamp(mouse.X - absPos.X, 360, 1200)
@@ -1148,7 +1143,7 @@ function Window:_EnableResize()
 		end
 	end)
 	self.ResizeHandle.InputEnded:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		if input.UserInputType == GetEnum("UserInputType", "MouseButton")1 or input.UserInputType == GetEnum("UserInputType", "Touch") then
 			resizing = false
 		end
 	end)
@@ -1208,12 +1203,12 @@ function Window:Notify(Options)
 		Forge.Make("UICorner", { CornerRadius = UDim.new(0, 10) }),
 		Forge.Make("UIStroke", { Color = Theme.Border, Thickness = 1, Transparency = 0.4, Skin = { Color = "Border" } }),
 		Forge.Make("TextLabel", {
-			Text = Options.Title or "Notification", TextSize = 14, TextXAlignment = Enum.TextXAlignment.Left,
+			Text = Options.Title or "Notification", TextSize = 14, TextXAlignment = GetEnum("TextXAlignment", "Left"),
 			TextColor3 = Color, Size = UDim2.new(1, -20, 0, 20), Position = UDim2.new(0, 12, 0, 10),
-			FontFace = Font.fromEnum(Enum.Font.Gotham),
+			FontFace = Font.fromEnum(GetEnum("Font", "Gotham")),
 		}),
 		Forge.Make("TextLabel", {
-			Text = Options.Description or "", TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left,
+			Text = Options.Description or "", TextSize = 12, TextXAlignment = GetEnum("TextXAlignment", "Left"),
 			TextColor3 = Theme.TextDim, Size = UDim2.new(1, -20, 0, 30), Position = UDim2.new(0, 12, 0, 32),
 			TextWrapped = true, Skin = { TextColor3 = "TextDim" },
 		}),
@@ -1316,7 +1311,7 @@ function VoidUI.new(Options)
 
 		local ScreenGui = Forge.Make("ScreenGui", {
 			Name = "VoidUI", Parent = GUIParent, IgnoreGuiInset = true,
-			ZIndexBehavior = Enum.ZIndexBehavior.Sibling, DisplayOrder = 1000, ResetOnSpawn = false,
+			ZIndexBehavior = GetEnum("ZIndexBehavior", "Sibling"), DisplayOrder = 1000, ResetOnSpawn = false,
 		}, {
 			UIScaleObj,
 			Forge.Make("Folder", { Name = "Windows" }),
