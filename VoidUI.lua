@@ -54,17 +54,41 @@ local function MergeTable(base, extra)
 	return target
 end
 
-local function Color(value, fallback)
+local function HexColor(value, fallback)
 	if typeof(value) == "Color3" then
 		return value
 	end
-	if type(value) == "string" then
-		local ok, parsed = pcall(Color3.fromHex, value)
-		if ok then
-			return parsed
-		end
+	if type(value) ~= "string" then
+		return fallback
 	end
-	return fallback
+	local hex = value:gsub("^#", ""):gsub("%s+", "")
+	if #hex == 3 then
+		hex = string.sub(hex, 1, 1) .. string.sub(hex, 1, 1) .. string.sub(hex, 2, 2) .. string.sub(hex, 2, 2) .. string.sub(hex, 3, 3) .. string.sub(hex, 3, 3)
+	end
+	if #hex ~= 6 or not hex:match("^[%x]+$") then
+		return fallback
+	end
+	local ok, r = pcall(tonumber, string.sub(hex, 1, 2), 16)
+	local ok2, g = pcall(tonumber, string.sub(hex, 3, 4), 16)
+	local ok3, b = pcall(tonumber, string.sub(hex, 5, 6), 16)
+	if not ok or not ok2 or not ok3 or not r or not g or not b then
+		return fallback
+	end
+	return Color3.new(r / 255, g / 255, b / 255)
+end
+
+local function Color(value, fallback)
+	return HexColor(value, fallback)
+end
+
+local function ColorToHex(value, fallback)
+	if typeof(value) ~= "Color3" then
+		return fallback or "FFFFFF"
+	end
+	local r = math.clamp(math.floor(value.R * 255 + 0.5), 0, 255)
+	local g = math.clamp(math.floor(value.G * 255 + 0.5), 0, 255)
+	local b = math.clamp(math.floor(value.B * 255 + 0.5), 0, 255)
+	return string.format("%02X%02X%02X", r, g, b)
 end
 
 local Forge = {
@@ -227,7 +251,7 @@ function Forge.Resolve(property, theme)
 	local function resolveValue(value, current)
 		if type(value) == "string" then
 			if string.sub(value, 1, 1) == "#" then
-				local ok, parsed = pcall(Color3.fromHex, value)
+				local ok, parsed = pcall(HexColor, value)
 				if ok then
 					return parsed
 				end
@@ -1033,8 +1057,8 @@ local ThemeFallbacks = {
 for _, theme in pairs(Palette) do
 	for key, value in pairs(theme) do
 		if type(value) == "string" and string.sub(value, 1, 1) == "#" then
-			local ok, color = pcall(Color3.fromHex, value)
-			if ok then theme[key] = color end
+			local color = HexColor(value, nil)
+			if color then theme[key] = color end
 		end
 	end
 end
@@ -2238,7 +2262,7 @@ function Tab:CreateColorPicker(options)
 		Name = "Hex",
 		Size = UDim2.new(1, 0, 0, 32),
 		BackgroundColor3 = theme.Surface,
-		Text = "#" .. value:ToHex(),
+		Text = "#" .. ColorToHex(value),
 		PlaceholderText = "#RRGGBB",
 		TextSize = 12,
 		TextColor3 = theme.Text,
@@ -2261,7 +2285,7 @@ function Tab:CreateColorPicker(options)
 		satVal.BackgroundColor3 = Color3.fromHSV(h, 1, 1)
 		swatch.BackgroundColor3 = value
 		hue.BackgroundColor3 = Color3.fromHSV(h, 1, 1)
-		hex.Text = "#" .. value:ToHex()
+		hex.Text = "#" .. ColorToHex(value)
 	end
 
 	local function commit(fire)
@@ -2321,13 +2345,14 @@ function Tab:CreateColorPicker(options)
 		if string.sub(text, 1, 1) ~= "#" then
 			text = "#" .. text
 		end
-		local ok, parsed = pcall(Color3.fromHex, text)
+		local parsed = HexColor(text, nil)
+		local ok = parsed ~= nil
 		if ok then
 			value = parsed
 			h, s, v = value:ToHSV()
 			commit(true)
 		else
-			hex.Text = "#" .. value:ToHex()
+			hex.Text = "#" .. ColorToHex(value)
 		end
 	end)
 	swatch.MouseButton1Click:Connect(function()
