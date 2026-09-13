@@ -1030,6 +1030,15 @@ local ThemeFallbacks = {
 	ControlHeight = 34
 }
 
+for _, theme in pairs(Palette) do
+	for key, value in pairs(theme) do
+		if type(value) == "string" and string.sub(value, 1, 1) == "#" then
+			local ok, color = pcall(Color3.fromHex, value)
+			if ok then theme[key] = color end
+		end
+	end
+end
+
 Forge.Themes = Palette
 Forge.ThemeFallbacks = ThemeFallbacks
 Forge.Theme = Palette.Default
