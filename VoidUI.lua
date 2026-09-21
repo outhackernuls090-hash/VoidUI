@@ -1,5 +1,5 @@
 local VoidUI = {}
-VoidUI.Version = "5.0.0"
+VoidUI.Version = "5.0.1"
 
 local cloneref = cloneref or clonereference or function(i) return i end
 local RunService = cloneref(game:GetService("RunService"))
@@ -118,7 +118,7 @@ Forge.Defaults = {
 		BackgroundColor3 = Color3.new(1, 1, 1)
 	},
 	TextLabel = {
-		BackgroundColor3 = Color3.new(1, 1, 1),
+		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
 		Text = "",
 		RichText = true,
@@ -1696,6 +1696,7 @@ function Tab:CreateBadge(options)
 		TextSize = options.TextSize or 10,
 		TextColor3 = textColor,
 		BackgroundColor3 = background,
+		BackgroundTransparency = 0,
 		AutomaticSize = GetEnum("AutomaticSize", "X"),
 		Size = UDim2.fromOffset(0, options.Height or 22),
 		LayoutOrder = #self.Widgets + 1,
