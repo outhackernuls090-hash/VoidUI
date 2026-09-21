@@ -1,5 +1,5 @@
 local VoidUI = {}
-VoidUI.Version = "5.0.1"
+VoidUI.Version = "5.0.2"
 
 local cloneref = cloneref or clonereference or function(i) return i end
 local RunService = cloneref(game:GetService("RunService"))
@@ -174,7 +174,7 @@ Forge.Defaults = {
 		ScrollBarImageTransparency = 0.55,
 		BorderSizePixel = 0,
 		BackgroundColor3 = Color3.new(1, 1, 1),
-		AutomaticCanvasSize = GetEnum("AutomaticCanvasSize", "Y"),
+		AutomaticCanvasSize = Enum.AutomaticSize.Y,
 		ScrollingDirection = GetEnum("ScrollingDirection", "Y"),
 		VerticalScrollBarInset = GetEnum("ScrollBarInset", "ScrollBar")
 	},
@@ -1257,8 +1257,9 @@ function Tab.new(window, options)
 		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
 		Size = UDim2.new(1, 0, 1, 0),
-		CanvasSize = UDim2.new(),
-		ScrollBarThickness = 3,
+		AutomaticCanvasSize = Enum.AutomaticSize.Y,
+		ScrollingDirection = Enum.ScrollingDirection.Y,
+		ScrollBarThickness = 4,
 		ScrollBarImageTransparency = 0.4,
 		ScrollBarImageColor3 = theme.Scrollbar,
 		Visible = false,
@@ -2849,8 +2850,9 @@ function Tab:CreateTable(options)
 		Name = "Table",
 		Size = UDim2.new(1, 0, 0, height),
 		BackgroundColor3 = theme.Surface,
-		CanvasSize = UDim2.new(),
-		ScrollBarThickness = 3,
+		AutomaticCanvasSize = Enum.AutomaticSize.Y,
+		ScrollingDirection = Enum.ScrollingDirection.Y,
+		ScrollBarThickness = 4,
 		ScrollBarImageColor3 = theme.Scrollbar,
 		LayoutOrder = #self.Widgets + 1,
 		Parent = self.Section,
@@ -3210,18 +3212,15 @@ function Window:_Build()
 		Skin = {TextColor3 = "TextMuted"},
 		Parent = sidebar
 	})
-	local content = Forge.Make("ScrollingFrame", {
+	local content = Forge.Make("Frame", {
 		Name = "Content",
 		BackgroundTransparency = 1,
 		Size = UDim2.new(1, -theme.SidebarWidth, 1, 0),
 		Position = UDim2.fromOffset(theme.SidebarWidth, 0),
 		BorderSizePixel = 0,
 		ZIndex = self.ZIndex + 2,
-		ScrollBarThickness = 3,
-		ScrollBarImageColor3 = theme.Scrollbar,
-		CanvasSize = UDim2.new(),
-		Parent = body,
-		Skin = {ScrollBarImageColor3 = "Scrollbar"}
+		ClipsDescendants = true,
+		Parent = body
 	})
 	local overlay = Forge.Make("Frame", {
 		Name = "InteractionOverlay",
